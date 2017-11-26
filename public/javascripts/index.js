@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2343,7 +2343,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       return 1 === arguments.length ? this.off(a, "**") : this.off(b, a || "**", c);
     } }), r.holdReady = function (a) {
     a ? r.readyWait++ : r.ready(!0);
-  }, r.isArray = Array.isArray, r.parseJSON = JSON.parse, r.nodeName = B, "function" == "function" && __webpack_require__(4) && !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+  }, r.isArray = Array.isArray, r.parseJSON = JSON.parse, r.nodeName = B, "function" == "function" && __webpack_require__(5) && !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
     return r;
   }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));var Vb = a.jQuery,
@@ -2351,10 +2351,50 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return a.$ === r && (a.$ = Wb), b && a.jQuery === r && (a.jQuery = Vb), r;
   }, b || (a.jQuery = a.$ = r), r;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var EventCenter = function () {
+  // 缓存添加的事件
+  var events = {};
+  // 添加事件函数
+  var on = function on(event, handler) {
+    events[event] = events[event] || [];
+    events[event].push({
+      handler: handler
+    });
+  };
+  // 触发事件函数
+  var trigger = function trigger(event, args) {
+    if (!events[event]) {
+      throw new Error('No such event');
+      return;
+    }
+    for (var i = 0; i < events[event].length; i++) {
+      events[event][i].handler(args);
+    }
+  };
+
+  /**
+   * 取消监听事件暂未添加
+   */
+
+  // 返回事件监听对象
+  return {
+    on: on,
+    trigger: trigger
+  };
+}();
+module.exports = EventCenter;
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2364,7 +2404,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-__webpack_require__(6);
+__webpack_require__(9);
 
 var Toast = function () {
   function Toast(msg, time) {
@@ -2408,25 +2448,29 @@ module.exports.Toast = function (msg, time) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
-__webpack_require__(5);
-var toast = __webpack_require__(1);
-var note = __webpack_require__(7);
+__webpack_require__(6);
+var NoteManger = __webpack_require__(7).NoteManger;
+var Event = __webpack_require__(1);
+var WaterFall = __webpack_require__(12);
+NoteManger.load();
+
 $('.add-note').on('click', function () {
-  note.creatNote({
-    id: '10',
-    context: 'Hello World'
-  });
+  NoteManger.add();
+});
+
+Event.on('waterfall', function () {
+  WaterFall.init($('#content'));
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -2454,19 +2498,13 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
 module.exports = __webpack_amd_options__;
 
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 6 */
@@ -2481,14 +2519,120 @@ module.exports = __webpack_amd_options__;
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {
 
+var _os = __webpack_require__(8);
+
+var Toast = __webpack_require__(2).Toast;
+var Note = __webpack_require__(10).creatNote;
+var Event = __webpack_require__(1);
+
+var NoteManger = function () {
+  function load() {
+    $.get('./note').done(function (result) {
+      if (result.code === 0) {
+        $.each(result.notes, function (index, article) {
+          console.log(article);
+          new Note({
+            id: article.noteId,
+            content: article.content
+          });
+        });
+        Event.trigger('waterfall');
+      } else {
+        Toast(result.errorMsg);
+      }
+    }).fail(function () {
+      Toast('网路异常');
+    });
+  }
+  function add() {
+    new Note();
+  }
+
+  return {
+    load: load,
+    add: add
+  };
+}();
+
+module.exports.NoteManger = NoteManger;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+exports.endianness = function () { return 'LE' };
+
+exports.hostname = function () {
+    if (typeof location !== 'undefined') {
+        return location.hostname
+    }
+    else return '';
+};
+
+exports.loadavg = function () { return [] };
+
+exports.uptime = function () { return 0 };
+
+exports.freemem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.totalmem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.cpus = function () { return [] };
+
+exports.type = function () { return 'Browser' };
+
+exports.release = function () {
+    if (typeof navigator !== 'undefined') {
+        return navigator.appVersion;
+    }
+    return '';
+};
+
+exports.networkInterfaces
+= exports.getNetworkInterfaces
+= function () { return {} };
+
+exports.arch = function () { return 'javascript' };
+
+exports.platform = function () { return 'browser' };
+
+exports.tmpdir = exports.tmpDir = function () {
+    return '/tmp';
+};
+
+exports.EOL = '\n';
+
+exports.homedir = function () {
+	return '/'
+};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-__webpack_require__(8);
+__webpack_require__(11);
 
-var createToast = __webpack_require__(1);
-var Event = __webpack_require__(9);
+var createToast = __webpack_require__(2);
+var Event = __webpack_require__(1);
 
 var Note = function () {
   function Note(options) {
@@ -2497,6 +2641,7 @@ var Note = function () {
     this.initOptions(options);
     this.createNote();
     this.setStyle();
+    this.setLayout();
     this.bindEvent();
   }
 
@@ -2513,6 +2658,7 @@ var Note = function () {
     value: function createNote() {
       var tpl = '<div class="note" style="display:none">\n    <div class="note-head"><span class="delete">&times;</span></div>\n    <div class="note-ct" contenteditable="true"></div>\n    </div>';
       this.$note = $(tpl);
+      this.$note.find('.note-ct').html(this.initOptions.content);
       this.initOptions.$ct.append(this.$note);
       this.$note.fadeIn(300);
       if (!this.id) {
@@ -2537,7 +2683,7 @@ var Note = function () {
         clearTimeout(this.clock);
       }
       this.clock = setTimeout(function () {
-        Event.trgger('waterfall');
+        Event.trigger('waterfall');
       }, 100);
     }
     // 绑定事件
@@ -2634,50 +2780,58 @@ module.exports.creatNote = function (options) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 9 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function($) {
 
+var WaterFall = function () {
+  var $ct = void 0;
+  var $items = void 0;
+  function render($c) {
+    $ct = $c;
+    $items = $ct.children();
 
-var EventCenter = function () {
-  // 缓存添加的事件
-  var events = {};
-  // 添加事件函数
-  var on = function on(event, handler) {
-    events[event] = events[event] || [];
-    events[event].push({
-      handler: handler
+    var noteWidth = $items.outerWidth(true);
+    var colNum = parseInt($(window).width() / noteWidth);
+    var colSumHeight = [];
+    for (var i = 0; i < colNum; i++) {
+      colSumHeight.push(0);
+    }
+    $items.each(function () {
+      var $cur = $(this);
+      var index = 0;
+      var minSumHeight = colSumHeight[0];
+      for (var _i = 0; _i < colSumHeight.length; _i++) {
+        if (colSumHeight[_i] < minSumHeight) {
+          index = _i;
+          minSumHeight = colSumHeight[_i];
+        }
+      }
+      $cur.css({
+        left: noteWidth * index,
+        top: minSumHeight
+      });
+      colSumHeight[index] = $cur.outerHeight(true) + colSumHeight[index];
     });
-  };
-  // 触发事件函数
-  var trigger = function trigger(event, args) {
-    if (!events[enent]) {
-      throw new Error('No such event');
-      return;
-    }
-    for (var i = 0; i < events[event].length; i++) {
-      events[event][i].handler(args);
-    }
-  };
-
-  /**
-   * 取消监听事件暂未添加
-   */
-
-  // 返回事件监听对象
+  }
+  $(window).on('resize', function () {
+    render($ct);
+  });
   return {
-    on: on,
-    trigger: trigger
+    init: render
   };
 }();
-module.exports = EventCenter;
+
+module.exports = WaterFall;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);

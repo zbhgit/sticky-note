@@ -9,6 +9,7 @@ class Note {
     this.initOptions(options)
     this.createNote()
     this.setStyle()
+    this.setLayout()
     this.bindEvent()
   }
   initOptions(options) {
@@ -23,6 +24,7 @@ class Note {
     <div class="note-ct" contenteditable="true"></div>
     </div>`
     this.$note = $(tpl)
+    this.$note.find('.note-ct').html(this.initOptions.content);
     this.initOptions.$ct.append(this.$note)
     this.$note.fadeIn(300)
     if (!this.id) {
@@ -41,7 +43,7 @@ class Note {
       clearTimeout(this.clock)
     }
     this.clock = setTimeout(() => {
-      Event.trgger('waterfall')
+      Event.trigger('waterfall')
     }, 100)
   }
   // 绑定事件

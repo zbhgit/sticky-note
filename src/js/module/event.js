@@ -12,7 +12,7 @@ const EventCenter = (() => {
   }
   // 触发事件函数
   const trigger = (event, args) => {
-    if (!events[enent]) {
+    if (!events[event]) {
       throw new Error('No such event')
       return
     }

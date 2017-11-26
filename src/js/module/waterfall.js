@@ -15,17 +15,17 @@ const WaterFall = (() => {
       const $cur = $(this)
       let index = 0
       let minSumHeight = colSumHeight[0]
-      for (let i = 0; i < colSumHeight.lebgth; i++) {
-        if (colSumHeight[i] < minSumHeight) {
+      for (let i = 0; i < colSumHeight.length; i++) {
+        if(colSumHeight[i] < minSumHeight){
           index = i
           minSumHeight = colSumHeight[i]
         }
       }
       $cur.css({
-        left: nodeWidth * idx,
+        left: noteWidth*index,
         top: minSumHeight
       });
-      colSumHeight[idx] = $cur.outerHeight(true) + colSumHeight[idx];
+      colSumHeight[index] = $cur.outerHeight(true) + colSumHeight[index]
     })
   }
   $(window).on('resize', function () {
@@ -35,3 +35,5 @@ const WaterFall = (() => {
     init: render
   }
 })();
+
+module.exports = WaterFall

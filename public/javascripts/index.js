@@ -2540,7 +2540,7 @@ var Note = function () {
         Event.trgger('waterfall');
       }, 100);
     }
-    // 
+    // 绑定事件
 
   }, {
     key: 'bindEvent',
@@ -2593,6 +2593,26 @@ var Note = function () {
 
       this.$note.fadeOut(300, function () {
         _this2.$note.remove();
+      });
+    }
+    // 添加内容
+
+  }, {
+    key: 'addContent',
+    value: function addContent(param) {
+      var _this3 = this;
+
+      var self = this;
+      var noteId = param.noteId,
+          content = param.content;
+
+      $.post('/note', { noteId: noteId, content: content }).done(function (result) {
+        if (result.code === 0) {
+          createToast.Toast('添加成功');
+        } else {
+          _this3.$note.remove();
+          createToast.Toast('添加失败');
+        }
       });
     }
   }]);

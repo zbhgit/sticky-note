@@ -44,7 +44,7 @@ class Note {
       Event.trgger('waterfall')
     }, 100)
   }
-  // 
+  // 绑定事件
   bindEvent() {
     const self = this
     const $note = this.$note
@@ -67,18 +67,18 @@ class Note {
       }
     })
     // 设置笔记的移动
-    $noteHead.on('mousedown', function(e){
+    $noteHead.on('mousedown', function (e) {
       var evtX = e.pageX - $note.offset().left,   //evtX 计算事件的触发点在 dialog内部到 dialog 的左边缘的距离
-          evtY = e.pageY - $note.offset().top;
-      $note.addClass('draggable').data('evtPos', {x:evtX, y:evtY}); //把事件到 dialog 边缘的距离保存下来
-    }).on('mouseup', function(){
-       $note.removeClass('draggable').removeData('pos');
+        evtY = e.pageY - $note.offset().top;
+      $note.addClass('draggable').data('evtPos', { x: evtX, y: evtY }); //把事件到 dialog 边缘的距离保存下来
+    }).on('mouseup', function () {
+      $note.removeClass('draggable').removeData('pos');
     });
 
-    $('body').on('mousemove', function(e){
+    $('body').on('mousemove', function (e) {
       $('.draggable').length && $('.draggable').offset({
-        top: e.pageY-$('.draggable').data('evtPos').y,    // 当用户鼠标移动时，根据鼠标的位置和前面保存的距离，计算 dialog 的绝对位置
-        left: e.pageX-$('.draggable').data('evtPos').x
+        top: e.pageY - $('.draggable').data('evtPos').y,    // 当用户鼠标移动时，根据鼠标的位置和前面保存的距离，计算 dialog 的绝对位置
+        left: e.pageX - $('.draggable').data('evtPos').x
       });
     });
   }
@@ -88,6 +88,21 @@ class Note {
       this.$note.remove()
     })
   }
+  // 添加内容
+  addContent(param) {
+    const self = this
+    const { noteId, content } = param
+    $.post('/note', { noteId, content })
+      .done((result) => {
+        if(result.code === 0) {
+          createToast.Toast('添加成功')
+        } else {
+          this.$note.remove()
+          createToast.Toast('添加失败')         
+        }
+      })
+  }
+
 }
 Note.defaultOptions = {
   id: '',

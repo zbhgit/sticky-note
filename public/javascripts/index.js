@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2343,7 +2343,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       return 1 === arguments.length ? this.off(a, "**") : this.off(b, a || "**", c);
     } }), r.holdReady = function (a) {
     a ? r.readyWait++ : r.ready(!0);
-  }, r.isArray = Array.isArray, r.parseJSON = JSON.parse, r.nodeName = B, "function" == "function" && __webpack_require__(3) && !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+  }, r.isArray = Array.isArray, r.parseJSON = JSON.parse, r.nodeName = B, "function" == "function" && __webpack_require__(4) && !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
     return r;
   }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));var Vb = a.jQuery,
@@ -2351,60 +2351,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return a.$ === r && (a.$ = Wb), b && a.jQuery === r && (a.jQuery = Vb), r;
   }, b || (a.jQuery = a.$ = r), r;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module)))
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-var toast = __webpack_require__(4);
-$('.add-note').on('click', function () {
-  toast.Toast("hello", 2000);
-});
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
-module.exports = __webpack_amd_options__;
-
-/* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2414,7 +2364,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-__webpack_require__(5);
+__webpack_require__(6);
 
 var Toast = function () {
   function Toast(msg, time) {
@@ -2458,10 +2408,256 @@ module.exports.Toast = function (msg, time) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+__webpack_require__(5);
+var toast = __webpack_require__(1);
+var note = __webpack_require__(7);
+$('.add-note').on('click', function () {
+  note.creatNote({
+    id: '10',
+    context: 'Hello World'
+  });
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
+
+/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+__webpack_require__(8);
+
+var createToast = __webpack_require__(1);
+var Event = __webpack_require__(9);
+
+var Note = function () {
+  function Note(options) {
+    _classCallCheck(this, Note);
+
+    this.initOptions(options);
+    this.createNote();
+    this.setStyle();
+    this.bindEvent();
+  }
+
+  _createClass(Note, [{
+    key: 'initOptions',
+    value: function initOptions(options) {
+      this.initOptions = Object.assign({}, Note.defaultOptions, options || {});
+      if (this.initOptions.id) {
+        this.id = this.initOptions.id;
+      }
+    }
+  }, {
+    key: 'createNote',
+    value: function createNote() {
+      var tpl = '<div class="note" style="display:none">\n    <div class="note-head"><span class="delete">&times;</span></div>\n    <div class="note-ct" contenteditable="true"></div>\n    </div>';
+      this.$note = $(tpl);
+      this.initOptions.$ct.append(this.$note);
+      this.$note.fadeIn(300);
+      if (!this.id) {
+        this.$note.css('bottom', '10px');
+      }
+    }
+    // 设置背景颜色
+
+  }, {
+    key: 'setStyle',
+    value: function setStyle() {
+      var color = Note.colors[Math.floor(Math.random() * 6)];
+      this.$note.find('.note-head').css('background-color', color[0]);
+      this.$note.find('.note-ct').css('background-color', color[1]);
+    }
+    // 设置位置
+
+  }, {
+    key: 'setLayout',
+    value: function setLayout() {
+      if (this.clock) {
+        clearTimeout(this.clock);
+      }
+      this.clock = setTimeout(function () {
+        Event.trgger('waterfall');
+      }, 100);
+    }
+    // 
+
+  }, {
+    key: 'bindEvent',
+    value: function bindEvent() {
+      var _this = this;
+
+      var self = this;
+      var $note = this.$note;
+      var $noteHead = $note.find('.note-head');
+      var $noteCt = $note.find('.note-ct');
+      var $delete = $note.find('.delete');
+      $delete.on('click', function () {
+        _this.delete();
+      });
+      $noteCt.on('focus', function () {
+        if ($noteCt.html() === 'input here') $noteCt.html('');
+        $noteCt.data('before', $noteCt.html());
+      }).on('blur paste', function () {
+        $noteCt.data('before', $noteCt.html());
+        self.setLayout();
+        if (self.id) {
+          self.edit($noteCt.html());
+        } else {
+          self.add($noteCt.html());
+        }
+      });
+      // 设置笔记的移动
+      $noteHead.on('mousedown', function (e) {
+        var evtX = e.pageX - $note.offset().left,
+            //evtX 计算事件的触发点在 dialog内部到 dialog 的左边缘的距离
+        evtY = e.pageY - $note.offset().top;
+        $note.addClass('draggable').data('evtPos', { x: evtX, y: evtY }); //把事件到 dialog 边缘的距离保存下来
+      }).on('mouseup', function () {
+        $note.removeClass('draggable').removeData('pos');
+      });
+
+      $('body').on('mousemove', function (e) {
+        $('.draggable').length && $('.draggable').offset({
+          top: e.pageY - $('.draggable').data('evtPos').y, // 当用户鼠标移动时，根据鼠标的位置和前面保存的距离，计算 dialog 的绝对位置
+          left: e.pageX - $('.draggable').data('evtPos').x
+        });
+      });
+    }
+    // 删除节点
+
+  }, {
+    key: 'delete',
+    value: function _delete() {
+      var _this2 = this;
+
+      this.$note.fadeOut(300, function () {
+        _this2.$note.remove();
+      });
+    }
+  }]);
+
+  return Note;
+}();
+
+Note.defaultOptions = {
+  id: '',
+  $ct: $('#content').length > 0 ? $('#content') : $('body'),
+  context: 'input here'
+};
+Note.colors = [['#ea9b35', '#efb04e'], // headColor, containerColor
+['#dd598b', '#e672a2'], ['#eee34b', '#f2eb67'], ['#c24226', '#d15a39'], ['#c1c341', '#d0d25c'], ['#3f78c3', '#5591d2']];
+
+module.exports.creatNote = function (options) {
+  return new Note(options);
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var EventCenter = function () {
+  // 缓存添加的事件
+  var events = {};
+  // 添加事件函数
+  var on = function on(event, handler) {
+    events[event] = events[event] || [];
+    events[event].push({
+      handler: handler
+    });
+  };
+  // 触发事件函数
+  var trigger = function trigger(event, args) {
+    if (!events[enent]) {
+      throw new Error('No such event');
+      return;
+    }
+    for (var i = 0; i < events[event].length; i++) {
+      events[event][i].handler(args);
+    }
+  };
+
+  /**
+   * 取消监听事件暂未添加
+   */
+
+  // 返回事件监听对象
+  return {
+    on: on,
+    trigger: trigger
+  };
+}();
+module.exports = EventCenter;
 
 /***/ })
 /******/ ]);

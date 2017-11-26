@@ -1,6 +1,10 @@
 
 require('less/index.less');
 const toast = require('../module/toast')
+const note = require('../module/note')
 $('.add-note').on('click', () => {
-  toast.Toast("hello", 2000)
+  note.creatNote({
+    id: '10',
+    context: 'Hello World'
+  })
 })

@@ -9,7 +9,7 @@ module.exports = {
   // 文件出口设置
   output: {
     path: path.join(__dirname, '../public/'),
-    filename: 'index.js'
+    filename: 'javascripts/index.js'
   },
   // less文件和js文件loader处理
   module: {

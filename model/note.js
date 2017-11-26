@@ -46,13 +46,30 @@ async function addNewNote(param) {
 
 async function getNotes() {
   const notes = await NoteModel.find({})
-  .catch((err) => {
-    throw new Error(`Error getting users from db${err}`);
-  });
-return notes;
+    .catch((err) => {
+      throw new Error(`Error getting users from db${err}`);
+    });
+  return notes;
 }
+
+/**
+ * 
+ * @param {*} id 
+ * @param {*} update 
+ */
+async function updateNoteById(id, update) {
+  const result = await NoteModel.findByIdAndUpdate({ _id: id }, update, { new: true })
+    .catch((err) => {
+      console.log(err)
+      throw new Error('error updating user by id')
+    })
+  return result
+}
+
+
 module.exports = {
   model: NoteModel,
   addNewNote,
   getNotes,
+  updateNoteById,
 }

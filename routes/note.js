@@ -41,5 +41,24 @@ router.route('/')
         next(e);
       });
   })
-
+router.route('/:id')
+  .post((req, res, next) => {
+    (async () => {
+      let update = {}
+      if (req.body.content) {
+        update.content = req.body.content;
+      }
+      const note = await Note.updateNoteById(req.params.id, update)
+      return {
+        code: 0,
+        note
+      }
+    })()
+      .then((result) => {
+        res.json(result);
+      })
+      .catch((err) => {
+        next(err);
+      });
+  })
 module.exports = router;

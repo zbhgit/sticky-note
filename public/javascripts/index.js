@@ -2719,18 +2719,6 @@ var Note = function () {
             self.addNote(param);
           }
         }
-        // let beforeHtml = $noteCt.data('before')
-        // if (beforeHtml === $noteCt.html()) {
-        //   return
-        // }
-        // self.setLayout();
-        // if ($noteCt.html() !== '') {
-        //   const param = {
-        //     noteId: 2,
-        //     content: $noteCt.html()
-        //   }
-        //   self.addNote(param)
-        // }
       });
       // 设置笔记的移动
       $noteHead.on('mousedown', function (e) {
@@ -2779,6 +2767,21 @@ var Note = function () {
           self.$note.remove();
           Event.trigger('watterfall');
           createToast.Toast('添加失败');
+        }
+      });
+    }
+    //
+
+  }, {
+    key: 'edit',
+    value: function edit(msg) {
+      var self = this;
+      var url = '/note/' + this.id;
+      $.post(url, { content: msg }).done(function (result) {
+        if (result.code === 0) {
+          createToast.Toast('修改成功');
+        } else {
+          createToast.Toast('修改失败');
         }
       });
     }

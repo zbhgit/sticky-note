@@ -11,9 +11,8 @@ const NoteManger = (() => {
       .done((result) => {
         if (result.code === 0) {
           $.each(result.notes, function (index, article) {
-            console.log(article)
             new Note({
-              id: article.noteId,
+              id: article._id,
               content: article.content
             })
           })

@@ -2530,9 +2530,8 @@ var NoteManger = function () {
     $.get('./note').done(function (result) {
       if (result.code === 0) {
         $.each(result.notes, function (index, article) {
-          console.log(article);
           new Note({
-            id: article.noteId,
+            id: article._id,
             content: article.content
           });
         });
@@ -2702,16 +2701,36 @@ var Note = function () {
         _this.delete();
       });
       $noteCt.on('focus', function () {
-        if ($noteCt.html() === 'input here') $noteCt.html('');
+        if ($noteCt.html() === 'input here') {
+          $noteCt.html('');
+        }
         $noteCt.data('before', $noteCt.html());
       }).on('blur paste', function () {
-        $noteCt.data('before', $noteCt.html());
-        self.setLayout();
-        var param = {
-          noteId: 2,
-          content: $noteCt.html()
-        };
-        self.addNote(param);
+        if ($noteCt.data('before') != $noteCt.html()) {
+          $noteCt.data('before', $noteCt.html());
+          self.setLayout();
+          if (self.id) {
+            self.edit($noteCt.html());
+          } else {
+            var param = {
+              noteId: 2,
+              content: $noteCt.html()
+            };
+            self.addNote(param);
+          }
+        }
+        // let beforeHtml = $noteCt.data('before')
+        // if (beforeHtml === $noteCt.html()) {
+        //   return
+        // }
+        // self.setLayout();
+        // if ($noteCt.html() !== '') {
+        //   const param = {
+        //     noteId: 2,
+        //     content: $noteCt.html()
+        //   }
+        //   self.addNote(param)
+        // }
       });
       // 设置笔记的移动
       $noteHead.on('mousedown', function (e) {
@@ -2738,29 +2757,14 @@ var Note = function () {
       var _this2 = this;
 
       this.$note.fadeOut(300, function () {
+        createToast.Toast('删除成功');
+
         _this2.$note.remove();
+        Event.trigger('waterfall');
       });
     }
-    // 添加内容
+    // 添加内容到服务器
 
-  }, {
-    key: 'addContent',
-    value: function addContent(param) {
-      var _this3 = this;
-
-      var self = this;
-      var noteId = param.noteId,
-          content = param.content;
-
-      $.post('/note', { noteId: noteId, content: content }).done(function (result) {
-        if (result.code === 0) {
-          createToast.Toast('添加成功');
-        } else {
-          _this3.$note.remove();
-          createToast.Toast('添加失败');
-        }
-      });
-    }
   }, {
     key: 'addNote',
     value: function addNote(param) {

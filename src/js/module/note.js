@@ -57,16 +57,34 @@ class Note {
       this.delete()
     })
     $noteCt.on('focus', () => {
-      if ($noteCt.html() === 'input here') $noteCt.html('')
+      if ($noteCt.html() === 'input here') { $noteCt.html('') }
       $noteCt.data('before', $noteCt.html())
     }).on('blur paste', () => {
-      $noteCt.data('before', $noteCt.html());
-      self.setLayout();
-      const param = {
-        noteId: 2,
-        content: $noteCt.html()
+      if ($noteCt.data('before') != $noteCt.html()) {
+        $noteCt.data('before', $noteCt.html());
+        self.setLayout();
+        if (self.id) {
+          self.edit($noteCt.html())
+        } else {
+          const param = {
+            noteId: 2,
+            content: $noteCt.html()
+          }
+          self.addNote(param)
+        }
       }
-      self.addNote(param)
+      // let beforeHtml = $noteCt.data('before')
+      // if (beforeHtml === $noteCt.html()) {
+      //   return
+      // }
+      // self.setLayout();
+      // if ($noteCt.html() !== '') {
+      //   const param = {
+      //     noteId: 2,
+      //     content: $noteCt.html()
+      //   }
+      //   self.addNote(param)
+      // }
     })
     // 设置笔记的移动
     $noteHead.on('mousedown', function (e) {
@@ -87,23 +105,13 @@ class Note {
   // 删除节点
   delete() {
     this.$note.fadeOut(300, () => {
+      createToast.Toast('删除成功')
+
       this.$note.remove()
+      Event.trigger('waterfall')
     })
   }
-  // 添加内容
-  addContent(param) {
-    const self = this
-    const { noteId, content } = param
-    $.post('/note', { noteId, content })
-      .done((result) => {
-        if (result.code === 0) {
-          createToast.Toast('添加成功')
-        } else {
-          this.$note.remove()
-          createToast.Toast('添加失败')
-        }
-      })
-  }
+  // 添加内容到服务器
   addNote(param) {
     const self = this
     const { noteId, content } = param

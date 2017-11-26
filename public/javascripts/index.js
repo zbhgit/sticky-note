@@ -2707,11 +2707,11 @@ var Note = function () {
       }).on('blur paste', function () {
         $noteCt.data('before', $noteCt.html());
         self.setLayout();
-        if (self.id) {
-          self.edit($noteCt.html());
-        } else {
-          self.add($noteCt.html());
-        }
+        var param = {
+          noteId: 2,
+          content: $noteCt.html()
+        };
+        self.addNote(param);
       });
       // 设置笔记的移动
       $noteHead.on('mousedown', function (e) {
@@ -2761,10 +2761,30 @@ var Note = function () {
         }
       });
     }
+  }, {
+    key: 'addNote',
+    value: function addNote(param) {
+      var self = this;
+      var noteId = param.noteId,
+          content = param.content;
+
+      $.post('/note', { noteId: noteId, content: content }).done(function (result) {
+        if (result.code === 0) {
+          createToast.Toast('添加成功');
+        } else {
+          self.$note.remove();
+          Event.trigger('watterfall');
+          createToast.Toast('添加失败');
+        }
+      });
+    }
   }]);
 
   return Note;
 }();
+
+//  定义默认参数内容
+
 
 Note.defaultOptions = {
   id: '',

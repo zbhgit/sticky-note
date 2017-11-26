@@ -62,11 +62,11 @@ class Note {
     }).on('blur paste', () => {
       $noteCt.data('before', $noteCt.html());
       self.setLayout();
-      if (self.id) {
-        self.edit($noteCt.html())
-      } else {
-        self.add($noteCt.html())
+      const param = {
+        noteId: 2,
+        content: $noteCt.html()
       }
+      self.addNote(param)
     })
     // 设置笔记的移动
     $noteHead.on('mousedown', function (e) {
@@ -96,16 +96,33 @@ class Note {
     const { noteId, content } = param
     $.post('/note', { noteId, content })
       .done((result) => {
-        if(result.code === 0) {
+        if (result.code === 0) {
           createToast.Toast('添加成功')
         } else {
           this.$note.remove()
-          createToast.Toast('添加失败')         
+          createToast.Toast('添加失败')
+        }
+      })
+  }
+  addNote(param) {
+    const self = this
+    const { noteId, content } = param
+    $.post('/note', { noteId, content })
+      .done((result) => {
+        if (result.code === 0) {
+          createToast.Toast('添加成功')
+        } else {
+          self.$note.remove()
+          Event.trigger('watterfall')
+          createToast.Toast('添加失败')
         }
       })
   }
 
 }
+
+
+//  定义默认参数内容
 Note.defaultOptions = {
   id: '',
   $ct: $('#content').length > 0 ? $('#content') : $('body'),

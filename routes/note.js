@@ -19,6 +19,9 @@ router.route('/')
     });
   })
   .post((req, res, next) => {
+    if (!req.session || !req.session.user) {
+      return res.send({ code: 1, errorMsg: '请先登录' })
+    }
     (async () => {
       const note = await Note.addNewNote({
         noteId: req.body.noteId,
@@ -42,6 +45,9 @@ router.route('/')
   })
 router.route('/:id')
   .put((req, res, next) => {
+    if (!req.session || !req.session.user) {
+      return res.send({ code: 1, errorMsg: '请先登录' })
+    }
     (async () => {
       let update = {}
       if (req.body.content) {
@@ -61,24 +67,31 @@ router.route('/:id')
       });
   })
   .delete((req, res, next) => {
-    (async () => {
-      if(!req.params.id) {
-        return {
-          code: 1,
-          message: '未设定需删除的note ID'
+    console.log(req.session)
+    console.log(req.session.user)
+    if (!req.session || !req.session.user) {
+      return res.send({ code: 1, errorMsg: '请先登录' })
+    } else {
+      (async () => {
+        if (!req.params.id) {
+          return {
+            code: 1,
+            message: '未设定需删除的note ID'
+          }
         }
-      }
-      const result = await Note.removeANote({id: req.params.id})
-      return {
-        code: 0,
-        result,
-      }
-    })()
-      .then((result) => {
-        res.json(result);
-      })
-      .catch((err) => {
-        next(err);
-      });
+        const result = await Note.removeANote({ id: req.params.id })
+        return {
+          code: 0,
+          result,
+        }
+      })()
+        .then((result) => {
+          res.json(result);
+        })
+        .catch((err) => {
+          next(err);
+        });
+    }
+
   })
 module.exports = router;

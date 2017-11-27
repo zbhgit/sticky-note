@@ -21,7 +21,7 @@ class Note {
   createNote() {
     const tpl = `<div class="note" style="display:none">
     <div class="note-head"><span class="delete">&times;</span></div>
-    <div class="note-ct" contenteditable="true">input here</div>
+    <div class="note-ct" contenteditable="true"></div>
     </div>`
     this.$note = $(tpl)
     this.$note.find('.note-ct').html(this.initOptions.content);
@@ -56,6 +56,13 @@ class Note {
     $delete.on('click', () => {
       this.delete()
     })
+    $note.on('mouseenter', () => {
+      $note.addClass('high-index')
+    })
+    $note.on('mouseleave', () => {
+      $note.removeClass('high-index')   
+    })
+
     $noteCt.on('focus', () => {
       if ($noteCt.html() === 'input here') { $noteCt.html('') }
       $noteCt.data('before', $noteCt.html())
@@ -81,8 +88,6 @@ class Note {
         evtY = e.pageY - $note.offset().top;
       $note.addClass('draggable').data('evtPos', { x: evtX, y: evtY }); //把事件到 dialog 边缘的距离保存下来
     }).on('mouseup', function () {
-      $note.parent().find('.note').css('zIndex', 0)
-      $note.css('zIndex', 1)
       $note.removeClass('draggable').removeData('pos');
     });
 
@@ -105,10 +110,12 @@ class Note {
             this.id = result.notes.id
           }
           createToast.Toast('添加成功')
+        } else if (result.code === 1) {
+          createToast.Toast(result.errorMsg)
         } else {
           self.$note.remove()
-          Event.trigger('watterfall')
-          createToast.Toast('添加失败')
+          Event.trigger('waterfall')
+          createToast.Toast('修改失败')
         }
       })
   }
@@ -126,7 +133,11 @@ class Note {
       .done((result) => {
         if (result.code === 0) {
           createToast.Toast('修改成功')
+        } else if (result.code === 1) {
+          createToast.Toast(result.errorMsg)
+
         } else {
+
           createToast.Toast('修改失败')
         }
       })
@@ -135,11 +146,9 @@ class Note {
   delete() {
     const self = this
     if (!this.id) {
-      this.$note.fadeOut(300, () => {
-        createToast.Toast('删除成功')
-        this.$note.remove()
-        Event.trigger('waterfall')
-      })
+      if (result.code === 0) {
+        this.noteHide('删除成功')
+      }
       return
     }
     const url = `/note/${self.id}`
@@ -148,13 +157,21 @@ class Note {
       url: url,
     })
       .done((result) => {
-        this.$note.fadeOut(300, () => {
-          createToast.Toast('删除成功')
-          this.$note.remove()
-          Event.trigger('waterfall')
-        })
-      })
+        if (result.code === 0) {
+          this.noteHide('删除成功')
+        } else {
+          createToast.Toast('请先登录')
 
+        }
+
+      })
+  }
+  noteHide(message) {
+    this.$note.fadeOut(300, () => {
+      createToast.Toast(message)
+      this.$note.remove()
+      Event.trigger('waterfall')
+    })
   }
 }
 
@@ -163,7 +180,7 @@ class Note {
 Note.defaultOptions = {
   id: '',
   $ct: $('#content').length > 0 ? $('#content') : $('body'),
-  context: 'input here'
+  content: 'input here'
 }
 Note.colors = [
   ['#ea9b35', '#efb04e'], // headColor, containerColor

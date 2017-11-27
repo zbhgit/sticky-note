@@ -120,7 +120,7 @@ a {
   margin: 20px 10px;
   transition: all .0.5s;
 }
-.note .high-index {
+.note.high-index {
   z-index: 2;
 }
 .note .note-head {
@@ -178,5 +178,5 @@ a {
   opacity: o.8;
   cursor: move;
   transition: none;
-  z-index: 100;
+  z-index: 101;
 }

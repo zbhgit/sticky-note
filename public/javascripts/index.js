@@ -2655,7 +2655,7 @@ var Note = function () {
   }, {
     key: 'createNote',
     value: function createNote() {
-      var tpl = '<div class="note" style="display:none">\n    <div class="note-head"><span class="delete">&times;</span></div>\n    <div class="note-ct" contenteditable="true">input here</div>\n    </div>';
+      var tpl = '<div class="note" style="display:none">\n    <div class="note-head"><span class="delete">&times;</span></div>\n    <div class="note-ct" contenteditable="true"></div>\n    </div>';
       this.$note = $(tpl);
       this.$note.find('.note-ct').html(this.initOptions.content);
       this.initOptions.$ct.append(this.$note);
@@ -2700,6 +2700,13 @@ var Note = function () {
       $delete.on('click', function () {
         _this.delete();
       });
+      $note.on('mouseenter', function () {
+        $note.addClass('high-index');
+      });
+      $note.on('mouseleave', function () {
+        $note.removeClass('high-index');
+      });
+
       $noteCt.on('focus', function () {
         if ($noteCt.html() === 'input here') {
           $noteCt.html('');
@@ -2728,8 +2735,6 @@ var Note = function () {
         evtY = e.pageY - $note.offset().top;
         $note.addClass('draggable').data('evtPos', { x: evtX, y: evtY }); //把事件到 dialog 边缘的距离保存下来
       }).on('mouseup', function () {
-        $note.parent().find('.note').css('zIndex', 0);
-        $note.css('zIndex', 1);
         $note.removeClass('draggable').removeData('pos');
       });
 
@@ -2758,10 +2763,12 @@ var Note = function () {
             _this2.id = result.notes.id;
           }
           createToast.Toast('添加成功');
+        } else if (result.code === 1) {
+          createToast.Toast(result.errorMsg);
         } else {
           self.$note.remove();
-          Event.trigger('watterfall');
-          createToast.Toast('添加失败');
+          Event.trigger('waterfall');
+          createToast.Toast('修改失败');
         }
       });
     }
@@ -2781,7 +2788,10 @@ var Note = function () {
       }).done(function (result) {
         if (result.code === 0) {
           createToast.Toast('修改成功');
+        } else if (result.code === 1) {
+          createToast.Toast(result.errorMsg);
         } else {
+
           createToast.Toast('修改失败');
         }
       });
@@ -2795,11 +2805,9 @@ var Note = function () {
 
       var self = this;
       if (!this.id) {
-        this.$note.fadeOut(300, function () {
-          createToast.Toast('删除成功');
-          _this3.$note.remove();
-          Event.trigger('waterfall');
-        });
+        if (result.code === 0) {
+          this.noteHide('删除成功');
+        }
         return;
       }
       var url = '/note/' + self.id;
@@ -2807,11 +2815,22 @@ var Note = function () {
         type: 'delete',
         url: url
       }).done(function (result) {
-        _this3.$note.fadeOut(300, function () {
-          createToast.Toast('删除成功');
-          _this3.$note.remove();
-          Event.trigger('waterfall');
-        });
+        if (result.code === 0) {
+          _this3.noteHide('删除成功');
+        } else {
+          createToast.Toast('请先登录');
+        }
+      });
+    }
+  }, {
+    key: 'noteHide',
+    value: function noteHide(message) {
+      var _this4 = this;
+
+      this.$note.fadeOut(300, function () {
+        createToast.Toast(message);
+        _this4.$note.remove();
+        Event.trigger('waterfall');
       });
     }
   }]);
@@ -2825,7 +2844,7 @@ var Note = function () {
 Note.defaultOptions = {
   id: '',
   $ct: $('#content').length > 0 ? $('#content') : $('body'),
-  context: 'input here'
+  content: 'input here'
 };
 Note.colors = [['#ea9b35', '#efb04e'], // headColor, containerColor
 ['#dd598b', '#e672a2'], ['#eee34b', '#f2eb67'], ['#c24226', '#d15a39'], ['#c1c341', '#d0d25c'], ['#3f78c3', '#5591d2']];

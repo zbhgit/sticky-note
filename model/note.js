@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose')
 
 const { Schema } = mongoose
@@ -32,6 +33,7 @@ async function addNewNote(param) {
       throw Error('Error creating note')
     })
   return {
+    id: created._id,
     noteId: created.noteId,
     content: created.content,
     createTime: created.createTime,
@@ -61,15 +63,25 @@ async function updateNoteById(id, update) {
   const result = await NoteModel.findByIdAndUpdate({ _id: id }, update, { new: true })
     .catch((err) => {
       console.log(err)
-      throw new Error('error updating user by id')
+      throw new Error('error updating note by id')
     })
   return result
 }
-
-
+/**
+ * 
+ * @param {*} _id 
+ */
+async function removeANote(param) {
+  const result = await NoteModel.deleteOne({_id: param.id})
+    .catch((err) => {
+      throw new Error('error removing note')
+    })
+  return result
+}
 module.exports = {
   model: NoteModel,
   addNewNote,
   getNotes,
   updateNoteById,
+  removeANote,
 }

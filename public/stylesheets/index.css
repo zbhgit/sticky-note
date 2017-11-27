@@ -86,6 +86,9 @@ a {
   display: block;
 }
 .stars {
+  position: fixed;
+  top: 0;
+  left: 0;
   background: #000 url(http://7xpvnv.com2.z0.glb.qiniucdn.com/ba25c630-1c91-4ac1-a3de-65555d78c147.png) repeat top center;
   z-index: -2;
 }
@@ -93,6 +96,10 @@ a {
   background: transparent url(http://7xpvnv.com2.z0.glb.qiniucdn.com/493b97e6-c499-4b41-a26b-8942873615b0.png) repeat top center;
   z-index: -1;
   animation: move-twink-back 200s linear infinite;
+}
+.line-center {
+  max-width: 90%;
+  margin: 0 auto;
 }
 .toast {
   position: fixed;
@@ -112,6 +119,9 @@ a {
   width: 160px;
   margin: 20px 10px;
   transition: all .0.5s;
+}
+.note .high-index {
+  z-index: 2;
 }
 .note .note-head {
   line-height: 20px;
@@ -149,19 +159,24 @@ a {
   padding: 10px;
   background-color: #efb04e;
   outline: none;
+  border-radius: 3px;
 }
 .note .delete {
   position: absolute;
-  top: 4px;
+  top: -3px;
   right: 4px;
   font-size: 12px;
   color: #fff;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity .3s;
+  transition: all .5s;
+  opacity: 1;
+}
+.note .delete:hover {
+  transform: rotate(180deg) scale(1.5);
 }
 .draggable {
   opacity: o.8;
   cursor: move;
   transition: none;
+  z-index: 100;
 }

@@ -2655,7 +2655,7 @@ var Note = function () {
   }, {
     key: 'createNote',
     value: function createNote() {
-      var tpl = '<div class="note" style="display:none">\n    <div class="note-head"><span class="delete">&times;</span></div>\n    <div class="note-ct" contenteditable="true"></div>\n    </div>';
+      var tpl = '<div class="note" style="display:none">\n    <div class="note-head"><span class="delete">&times;</span></div>\n    <div class="note-ct" contenteditable="true">input here</div>\n    </div>';
       this.$note = $(tpl);
       this.$note.find('.note-ct').html(this.initOptions.content);
       this.initOptions.$ct.append(this.$note);
@@ -2720,6 +2720,7 @@ var Note = function () {
           }
         }
       });
+
       // 设置笔记的移动
       $noteHead.on('mousedown', function (e) {
         var evtX = e.pageX - $note.offset().left,
@@ -2727,6 +2728,8 @@ var Note = function () {
         evtY = e.pageY - $note.offset().top;
         $note.addClass('draggable').data('evtPos', { x: evtX, y: evtY }); //把事件到 dialog 边缘的距离保存下来
       }).on('mouseup', function () {
+        $note.parent().find('.note').css('zIndex', 0);
+        $note.css('zIndex', 1);
         $note.removeClass('draggable').removeData('pos');
       });
 
@@ -2737,31 +2740,23 @@ var Note = function () {
         });
       });
     }
-    // 删除节点
 
-  }, {
-    key: 'delete',
-    value: function _delete() {
-      var _this2 = this;
-
-      this.$note.fadeOut(300, function () {
-        createToast.Toast('删除成功');
-
-        _this2.$note.remove();
-        Event.trigger('waterfall');
-      });
-    }
     // 添加内容到服务器
 
   }, {
     key: 'addNote',
     value: function addNote(param) {
+      var _this2 = this;
+
       var self = this;
       var noteId = param.noteId,
           content = param.content;
 
       $.post('/note', { noteId: noteId, content: content }).done(function (result) {
         if (result.code === 0) {
+          if (!_this2.id) {
+            _this2.id = result.notes.id;
+          }
           createToast.Toast('添加成功');
         } else {
           self.$note.remove();
@@ -2777,12 +2772,46 @@ var Note = function () {
     value: function edit(msg) {
       var self = this;
       var url = '/note/' + this.id;
-      $.post(url, { content: msg }).done(function (result) {
+      $.ajax({
+        url: url,
+        type: 'PUT',
+        data: {
+          content: msg
+        }
+      }).done(function (result) {
         if (result.code === 0) {
           createToast.Toast('修改成功');
         } else {
           createToast.Toast('修改失败');
         }
+      });
+    }
+    // 删除节点
+
+  }, {
+    key: 'delete',
+    value: function _delete() {
+      var _this3 = this;
+
+      var self = this;
+      if (!this.id) {
+        this.$note.fadeOut(300, function () {
+          createToast.Toast('删除成功');
+          _this3.$note.remove();
+          Event.trigger('waterfall');
+        });
+        return;
+      }
+      var url = '/note/' + self.id;
+      $.ajax({
+        type: 'delete',
+        url: url
+      }).done(function (result) {
+        _this3.$note.fadeOut(300, function () {
+          createToast.Toast('删除成功');
+          _this3.$note.remove();
+          Event.trigger('waterfall');
+        });
       });
     }
   }]);

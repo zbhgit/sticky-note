@@ -21,7 +21,7 @@ class Note {
   createNote() {
     const tpl = `<div class="note" style="display:none">
     <div class="note-head"><span class="delete">&times;</span></div>
-    <div class="note-ct" contenteditable="true"></div>
+    <div class="note-ct" contenteditable="true">input here</div>
     </div>`
     this.$note = $(tpl)
     this.$note.find('.note-ct').html(this.initOptions.content);
@@ -74,12 +74,15 @@ class Note {
         }
       }
     })
+
     // 设置笔记的移动
     $noteHead.on('mousedown', function (e) {
       var evtX = e.pageX - $note.offset().left,   //evtX 计算事件的触发点在 dialog内部到 dialog 的左边缘的距离
         evtY = e.pageY - $note.offset().top;
       $note.addClass('draggable').data('evtPos', { x: evtX, y: evtY }); //把事件到 dialog 边缘的距离保存下来
     }).on('mouseup', function () {
+      $note.parent().find('.note').css('zIndex', 0)
+      $note.css('zIndex', 1)
       $note.removeClass('draggable').removeData('pos');
     });
 
@@ -90,15 +93,7 @@ class Note {
       });
     });
   }
-  // 删除节点
-  delete() {
-    this.$note.fadeOut(300, () => {
-      createToast.Toast('删除成功')
 
-      this.$note.remove()
-      Event.trigger('waterfall')
-    })
-  }
   // 添加内容到服务器
   addNote(param) {
     const self = this
@@ -106,6 +101,9 @@ class Note {
     $.post('/note', { noteId, content })
       .done((result) => {
         if (result.code === 0) {
+          if (!this.id) {
+            this.id = result.notes.id
+          }
           createToast.Toast('添加成功')
         } else {
           self.$note.remove()
@@ -118,7 +116,13 @@ class Note {
   edit(msg) {
     const self = this
     const url = `/note/${this.id}`
-    $.post(url, { content: msg })
+    $.ajax({
+      url: url,
+      type: 'PUT',
+      data: {
+        content: msg
+      }
+    })
       .done((result) => {
         if (result.code === 0) {
           createToast.Toast('修改成功')
@@ -126,6 +130,31 @@ class Note {
           createToast.Toast('修改失败')
         }
       })
+  }
+  // 删除节点
+  delete() {
+    const self = this
+    if (!this.id) {
+      this.$note.fadeOut(300, () => {
+        createToast.Toast('删除成功')
+        this.$note.remove()
+        Event.trigger('waterfall')
+      })
+      return
+    }
+    const url = `/note/${self.id}`
+    $.ajax({
+      type: 'delete',
+      url: url,
+    })
+      .done((result) => {
+        this.$note.fadeOut(300, () => {
+          createToast.Toast('删除成功')
+          this.$note.remove()
+          Event.trigger('waterfall')
+        })
+      })
+
   }
 }
 

@@ -26,7 +26,6 @@ router.route('/')
         pageX: req.body.pageX,
         pageY: req.body.pageY,
       })
-      console.log('enter')
       return {
         note
       }
@@ -42,7 +41,7 @@ router.route('/')
       });
   })
 router.route('/:id')
-  .post((req, res, next) => {
+  .put((req, res, next) => {
     (async () => {
       let update = {}
       if (req.body.content) {
@@ -52,6 +51,27 @@ router.route('/:id')
       return {
         code: 0,
         note
+      }
+    })()
+      .then((result) => {
+        res.json(result);
+      })
+      .catch((err) => {
+        next(err);
+      });
+  })
+  .delete((req, res, next) => {
+    (async () => {
+      if(!req.params.id) {
+        return {
+          code: 1,
+          message: '未设定需删除的note ID'
+        }
+      }
+      const result = await Note.removeANote({id: req.params.id})
+      return {
+        code: 0,
+        result,
       }
     })()
       .then((result) => {

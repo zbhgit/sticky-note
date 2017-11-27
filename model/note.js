@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const NoteSchema = new Schema({
-  noteId: { type: Number },
+  userId: { type: Number,unique: true },
   content: { type: String },
   createTime: { type: Date, default: Date.now },
   pageX: { type: Number },
@@ -12,7 +12,7 @@ const NoteSchema = new Schema({
 })
 /**
  * 创建note
- * @param noteId
+ * @param userId
  * @param content
  * @param createTime
  * @param pageX
@@ -23,7 +23,7 @@ const NoteModel = mongoose.model('note', NoteSchema)
 
 async function addNewNote(param) {
   const note = new NoteModel({
-    noteId: param.noteId,
+    userId: param.userId,
     content: param.content,
     pageX: param.pageX,
     pageY: param.pageY
@@ -34,7 +34,7 @@ async function addNewNote(param) {
     })
   return {
     id: created._id,
-    noteId: created.noteId,
+    userId: created.userId,
     content: created.content,
     createTime: created.createTime,
     pageX: created.pageX,
@@ -43,11 +43,11 @@ async function addNewNote(param) {
 }
 /**
  * 获取notes
- * @param none
+ * @param {Number} userId
  */
 
-async function getNotes() {
-  const notes = await NoteModel.find({})
+async function getNotes(userId) {
+  const notes = await NoteModel.find({userId: userId})
     .catch((err) => {
       throw new Error(`Error getting users from db${err}`);
     });

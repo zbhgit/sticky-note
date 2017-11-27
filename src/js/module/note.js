@@ -146,9 +146,7 @@ class Note {
   delete() {
     const self = this
     if (!this.id) {
-      if (result.code === 0) {
         this.noteHide('删除成功')
-      }
       return
     }
     const url = `/note/${self.id}`

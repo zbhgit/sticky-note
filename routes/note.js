@@ -4,8 +4,12 @@ const Note = require('../model/note')
 /* GET users listing. */
 router.route('/')
   .get((req, res, next) => {
+    if (!req.session || !req.session.user) {
+      return res.send({ code: 1, errorMsg: '请先登录' })
+    }
     (async () => {
-      let notes = await Note.getNotes();
+
+      let notes = await Note.getNotes(req.session.user.id);
       return {
         notes,
       };
@@ -24,7 +28,7 @@ router.route('/')
     }
     (async () => {
       const note = await Note.addNewNote({
-        noteId: req.body.noteId,
+        userId: req.session.user.id,
         content: req.body.content,
         pageX: req.body.pageX,
         pageY: req.body.pageY,

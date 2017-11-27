@@ -2805,9 +2805,7 @@ var Note = function () {
 
       var self = this;
       if (!this.id) {
-        if (result.code === 0) {
-          this.noteHide('删除成功');
-        }
+        this.noteHide('删除成功');
         return;
       }
       var url = '/note/' + self.id;

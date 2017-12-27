@@ -30,7 +30,6 @@ async function addNewNote(param) {
   })
   const created = await note.save()
     .catch((err) => {
-      console.log(err)
       throw Error('Error creating note')
     })
   return {

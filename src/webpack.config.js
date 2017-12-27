@@ -49,13 +49,13 @@ module.exports = {
       }
     }),
     // 打包压缩设置
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     warnings: false,
-    //   },
-    //   output: {
-    //     comments: false,
-    //   }
-    // })
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+      },
+      output: {
+        comments: false,
+      }
+    })
   ]
 }

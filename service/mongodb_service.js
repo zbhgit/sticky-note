@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const uri = 'mongodb://localhost:27020/db'
+const uri = 'mongodb://localhost:27017/stick-note'
 
 mongoose.connect(uri, { useMongoClient: true })
 // connect

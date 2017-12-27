@@ -38,6 +38,7 @@ router.route('/')
       }
     })()
       .then((r) => {
+        console.log(r)
         res.json({
           code: 0,
           notes: r.note,

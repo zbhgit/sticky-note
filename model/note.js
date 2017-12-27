@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const NoteSchema = new Schema({
-  userId: { type: Number,unique: true },
+  userId: { type: Number },
   content: { type: String },
   createTime: { type: Date, default: Date.now },
   pageX: { type: Number },
@@ -30,6 +30,7 @@ async function addNewNote(param) {
   })
   const created = await note.save()
     .catch((err) => {
+      console.log(err)
       throw Error('Error creating note')
     })
   return {
@@ -47,7 +48,7 @@ async function addNewNote(param) {
  */
 
 async function getNotes(userId) {
-  const notes = await NoteModel.find({userId: userId})
+  const notes = await NoteModel.find({ userId: userId })
     .catch((err) => {
       throw new Error(`Error getting users from db${err}`);
     });
@@ -72,7 +73,7 @@ async function updateNoteById(id, update) {
  * @param {*} _id 
  */
 async function removeANote(param) {
-  const result = await NoteModel.deleteOne({_id: param.id})
+  const result = await NoteModel.deleteOne({ _id: param.id })
     .catch((err) => {
       throw new Error('error removing note')
     })

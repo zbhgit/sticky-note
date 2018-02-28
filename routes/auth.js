@@ -13,10 +13,9 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
-
 passport.use(new GitHubStrategy({
   clientID: '25fb60fefe06bf27cb4c',
-  clientSecret: 'feeefeea1f18d87b098680c5deb3d17580563528',
+  clientSecret: '986d95a5d612bba74d57504966705b5968e553c8',
   callbackURL: "http://18.222.33.142:3000/auth/github/callback"
 },
   (accessToken, refreshToken, profile, done) => {
